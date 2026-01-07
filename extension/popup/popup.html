@@ -28,12 +28,6 @@
 
     <!-- Tabs -->
     <nav class="tabs">
-      <button class="tab" data-tab="record">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="8"/>
-        </svg>
-        Record
-      </button>
       <button class="tab active" data-tab="mcp">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
@@ -49,10 +43,203 @@
         </svg>
         Agent
       </button>
+      <button class="tab" data-tab="record">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="8"/>
+        </svg>
+        Record
+      </button>
     </nav>
 
     <!-- Content -->
     <main class="content">
+      <!-- MCP Tab -->
+      <section class="tab-content active" id="mcpTab">
+        <!-- Status Card -->
+        <div class="mcp-status-card">
+          <div class="mcp-indicator" id="mcpIndicator">
+            <span class="pulse"></span>
+          </div>
+          <div class="mcp-info">
+            <h3>MCP Server</h3>
+            <p id="mcpStatusText">Not Connected</p>
+          </div>
+        </div>
+
+        <!-- Config -->
+        <div class="collapsible" id="mcpConfigCollapsible">
+          <div class="collapsible-header">
+            <h3>Server Configuration</h3>
+            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="collapsible-content">
+            <div class="input-row">
+              <div class="input-group">
+                <label for="mcpHost">Host</label>
+                <input type="text" id="mcpHost" value="localhost">
+              </div>
+              <div class="input-group" style="max-width: 80px;">
+                <label for="mcpPort">Port</label>
+                <input type="number" id="mcpPort" value="3052">
+              </div>
+            </div>
+            <button class="primary-btn" id="startMcpBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5,3 19,12 5,21"/>
+              </svg>
+              Connect
+            </button>
+          </div>
+        </div>
+
+        <!-- Tools -->
+        <div class="collapsible" id="toolsCollapsible">
+          <div class="collapsible-header">
+            <h3>Available Tools</h3>
+            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="collapsible-content">
+            <div class="tools-grid">
+              <div class="tool-item"><span class="tool-icon">🖱️</span><span class="tool-name">click</span></div>
+              <div class="tool-item"><span class="tool-icon">⌨️</span><span class="tool-name">type</span></div>
+              <div class="tool-item"><span class="tool-icon">🧭</span><span class="tool-name">navigate</span></div>
+              <div class="tool-item"><span class="tool-icon">📸</span><span class="tool-name">snapshot</span></div>
+              <div class="tool-item"><span class="tool-icon">📜</span><span class="tool-name">scroll</span></div>
+              <div class="tool-item"><span class="tool-icon">🔍</span><span class="tool-name">evaluate</span></div>
+              <div class="tool-item"><span class="tool-icon">⏳</span><span class="tool-name">wait</span></div>
+              <div class="tool-item"><span class="tool-icon">👆</span><span class="tool-name">hover</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Setup -->
+        <div class="mcp-instructions">
+          <h3>Quick Setup</h3>
+          <div class="instruction-steps">
+            <div class="step">
+              <span class="step-num">1</span>
+              <p>Run <code>npm start</code> in mcp-server folder</p>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <p>Add config below to your AI tool's MCP settings</p>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <p>Click Connect above</p>
+            </div>
+          </div>
+          <div class="config-code">
+            <pre id="mcpConfigCode">{
+  "chrome-mcp": {
+    "command": "node",
+    "args": ["/path/to/ChromeMCP/mcp-server/index.js"]
+  }
+}</pre>
+            <button class="copy-config-btn" id="copyConfigBtn">Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Agent Tab -->
+      <section class="tab-content" id="agentTab">
+        <!-- Control Panel -->
+        <div class="agent-control-panel">
+          <div>
+            <h3>Agent Control</h3>
+            <p class="help-text">Allow AI to control browser</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="agentEnabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Permissions -->
+        <div class="collapsible" id="permissionsCollapsible">
+          <div class="collapsible-header">
+            <h3>Permissions</h3>
+            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="collapsible-content">
+            <label class="checkbox-option">
+              <input type="checkbox" id="allowMouse" checked>
+              <span class="checkmark"></span>
+              Mouse Control
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="allowKeyboard" checked>
+              <span class="checkmark"></span>
+              Keyboard Input
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="allowNavigation" checked>
+              <span class="checkmark"></span>
+              Navigation
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="allowScripts" checked>
+              <span class="checkmark"></span>
+              Script Execution
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="allowScreenshot">
+              <span class="checkmark"></span>
+              Screenshots
+            </label>
+          </div>
+        </div>
+
+        <!-- Visual Feedback -->
+        <div class="collapsible" id="visualCollapsible">
+          <div class="collapsible-header">
+            <h3>Visual Feedback</h3>
+            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="collapsible-content">
+            <label class="checkbox-option">
+              <input type="checkbox" id="showCursor" checked>
+              <span class="checkmark"></span>
+              Show AI Cursor
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="highlightTarget" checked>
+              <span class="checkmark"></span>
+              Highlight Targets
+            </label>
+            <label class="checkbox-option">
+              <input type="checkbox" id="showTooltips" checked>
+              <span class="checkmark"></span>
+              Show Action Tooltips
+            </label>
+          </div>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="agent-activity">
+          <div class="section-header">
+            <h3>Recent Activity</h3>
+          </div>
+          <div class="activity-log" id="agentActivityLog">
+            <div class="activity-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6V12L16 14"/>
+              </svg>
+              <p>No agent activity yet</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Record Tab -->
       <section class="tab-content" id="recordTab">
         <!-- Record Controls -->
@@ -168,193 +355,6 @@
                 <path d="M12 8V12L14 14"/>
               </svg>
               <p>Start recording to capture interactions</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- MCP Tab -->
-      <section class="tab-content active" id="mcpTab">
-        <!-- Status Card -->
-        <div class="mcp-status-card">
-          <div class="mcp-indicator" id="mcpIndicator">
-            <span class="pulse"></span>
-          </div>
-          <div class="mcp-info">
-            <h3>MCP Server</h3>
-            <p id="mcpStatusText">Not Connected</p>
-          </div>
-        </div>
-
-        <!-- Config -->
-        <div class="collapsible" id="mcpConfigCollapsible">
-          <div class="collapsible-header">
-            <h3>Server Configuration</h3>
-            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <div class="collapsible-content">
-            <div class="input-row">
-              <div class="input-group">
-                <label for="mcpHost">Host</label>
-                <input type="text" id="mcpHost" value="localhost">
-              </div>
-              <div class="input-group" style="max-width: 80px;">
-                <label for="mcpPort">Port</label>
-                <input type="number" id="mcpPort" value="3052">
-              </div>
-            </div>
-            <button class="primary-btn" id="startMcpBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="5,3 19,12 5,21"/>
-              </svg>
-              Connect
-            </button>
-          </div>
-        </div>
-
-        <!-- Tools -->
-        <div class="collapsible" id="toolsCollapsible">
-          <div class="collapsible-header">
-            <h3>Available Tools</h3>
-            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <div class="collapsible-content">
-            <div class="tools-grid">
-              <div class="tool-item"><span class="tool-icon">🖱️</span><span class="tool-name">click</span></div>
-              <div class="tool-item"><span class="tool-icon">⌨️</span><span class="tool-name">type</span></div>
-              <div class="tool-item"><span class="tool-icon">🧭</span><span class="tool-name">navigate</span></div>
-              <div class="tool-item"><span class="tool-icon">📸</span><span class="tool-name">snapshot</span></div>
-              <div class="tool-item"><span class="tool-icon">📜</span><span class="tool-name">scroll</span></div>
-              <div class="tool-item"><span class="tool-icon">🔍</span><span class="tool-name">evaluate</span></div>
-              <div class="tool-item"><span class="tool-icon">⏳</span><span class="tool-name">wait</span></div>
-              <div class="tool-item"><span class="tool-icon">👆</span><span class="tool-name">hover</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Setup -->
-        <div class="mcp-instructions">
-          <h3>Quick Setup</h3>
-          <div class="instruction-steps">
-            <div class="step">
-              <span class="step-num">1</span>
-              <p>Run <code>npm start</code> in mcp-server folder</p>
-            </div>
-            <div class="step">
-              <span class="step-num">2</span>
-              <p>Add config below to your AI tool's MCP settings</p>
-            </div>
-            <div class="step">
-              <span class="step-num">3</span>
-              <p>Click Connect above</p>
-            </div>
-          </div>
-          <div class="config-code">
-            <pre id="mcpConfigCode">{
-  "chrome-mcp": {
-    "command": "node",
-    "args": ["/path/to/ChromeMCP/mcp-server/index.js"]
-  }
-}</pre>
-            <button class="copy-config-btn" id="copyConfigBtn">Copy</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Agent Tab -->
-      <section class="tab-content" id="agentTab">
-        <!-- Control Panel -->
-        <div class="agent-control-panel">
-          <div>
-            <h3>Agent Control</h3>
-            <p class="help-text">Allow AI to control browser</p>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="agentEnabled">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <!-- Permissions -->
-        <div class="collapsible" id="permissionsCollapsible">
-          <div class="collapsible-header">
-            <h3>Permissions</h3>
-            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <div class="collapsible-content">
-            <label class="checkbox-option">
-              <input type="checkbox" id="allowMouse" checked>
-              <span class="checkmark"></span>
-              Mouse Control
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="allowKeyboard" checked>
-              <span class="checkmark"></span>
-              Keyboard Input
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="allowNavigation" checked>
-              <span class="checkmark"></span>
-              Navigation
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="allowScripts" checked>
-              <span class="checkmark"></span>
-              Script Execution
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="allowScreenshot">
-              <span class="checkmark"></span>
-              Screenshots
-            </label>
-          </div>
-        </div>
-
-        <!-- Visual Feedback -->
-        <div class="collapsible" id="visualCollapsible">
-          <div class="collapsible-header">
-            <h3>Visual Feedback</h3>
-            <svg class="collapsible-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </div>
-          <div class="collapsible-content">
-            <label class="checkbox-option">
-              <input type="checkbox" id="showCursor" checked>
-              <span class="checkmark"></span>
-              Show AI Cursor
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="highlightTarget" checked>
-              <span class="checkmark"></span>
-              Highlight Targets
-            </label>
-            <label class="checkbox-option">
-              <input type="checkbox" id="showTooltips" checked>
-              <span class="checkmark"></span>
-              Show Action Tooltips
-            </label>
-          </div>
-        </div>
-
-        <!-- Activity Log -->
-        <div class="agent-activity">
-          <div class="section-header">
-            <h3>Recent Activity</h3>
-          </div>
-          <div class="activity-log" id="agentActivityLog">
-            <div class="activity-empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6V12L16 14"/>
-              </svg>
-              <p>No agent activity yet</p>
             </div>
           </div>
         </div>

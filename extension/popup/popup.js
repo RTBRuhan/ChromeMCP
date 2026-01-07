@@ -749,7 +749,7 @@ async function loadSettings() {
   elements.thresholdValue.textContent = `${settings.dynamicThreshold ?? 500}ms`;
   elements.mcpPort.value = settings.mcpPort ?? 3052;
   elements.mcpHost.value = settings.mcpHost ?? 'localhost';
-  elements.agentEnabled.checked = settings.agentEnabled ?? false;
+  elements.agentEnabled.checked = settings.agentEnabled ?? true;
   elements.allowMouse.checked = settings.allowMouse ?? true;
   elements.allowKeyboard.checked = settings.allowKeyboard ?? true;
   elements.allowNavigation.checked = settings.allowNavigation ?? true;

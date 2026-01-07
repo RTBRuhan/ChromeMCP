@@ -5,7 +5,7 @@
 let mcpServerRunning = false;
 let mcpPort = 3052;
 let mcpHost = 'localhost';
-let agentEnabled = false;
+let agentEnabled = true;
 let agentPermissions = {};
 let mcpWebSocket = null;
 let reconnectAttempts = 0;
@@ -42,7 +42,7 @@ chrome.runtime.onInstalled.addListener(() => {
     recordLog: [],
     mcpPort: 3052,
     mcpHost: 'localhost',
-    agentEnabled: false,
+    agentEnabled: true,
     autoReconnect: true
   });
 });
