@@ -540,6 +540,14 @@
           return getPageMetrics();
         case 'FIND_BY_TEXT':
           return findByText(action.text, action.tag);
+        case 'CLICK_BY_TEXT':
+          return await clickByText(action.text, action.options);
+        case 'WAIT_FOR_ELEMENT':
+          return await waitForElement(action.selector, action.options);
+        case 'EXECUTE_SAFE':
+          return executeSafe(action.code);
+        case 'EXECUTE_ON_ELEMENT':
+          return executeOnElement(action.selector, action.code);
         case 'GET_ATTRIBUTES':
           return getAttributes(action.selector);
         case 'GET_EVENT_LISTENERS':
@@ -1295,6 +1303,153 @@
       found: result.snapshotLength,
       elements: elements
     };
+  }
+
+  // Click element by text content
+  async function clickByText(text, options = {}) {
+    const { tag = null, exact = false, index = 0 } = options;
+    
+    let xpath;
+    if (exact) {
+      xpath = tag 
+        ? `//${tag}[text()="${text}"]`
+        : `//*[text()="${text}"]`;
+    } else {
+      xpath = tag 
+        ? `//${tag}[contains(text(), "${text}")]`
+        : `//*[contains(text(), "${text}")]`;
+    }
+    
+    const result = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    
+    if (result.snapshotLength === 0) {
+      return { error: `No element found with text: "${text}"` };
+    }
+    
+    // Filter to visible elements
+    const visibleElements = [];
+    for (let i = 0; i < result.snapshotLength; i++) {
+      const el = result.snapshotItem(i);
+      if (isVisible(el)) {
+        visibleElements.push(el);
+      }
+    }
+    
+    if (visibleElements.length === 0) {
+      return { error: `Found ${result.snapshotLength} elements with text "${text}" but none are visible` };
+    }
+    
+    const targetIndex = Math.min(index, visibleElements.length - 1);
+    const element = visibleElements[targetIndex];
+    
+    // Use existing click logic
+    const rect = element.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    
+    await moveMouse(x, y);
+    highlightElement(element);
+    
+    const eventOptions = {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: x,
+      clientY: y
+    };
+    
+    element.dispatchEvent(new MouseEvent('mousedown', eventOptions));
+    element.dispatchEvent(new MouseEvent('mouseup', eventOptions));
+    element.dispatchEvent(new MouseEvent('click', eventOptions));
+    
+    if (element.focus) element.focus();
+    
+    showActionTooltip('Click', `"${text}"`);
+    
+    return {
+      success: true,
+      text: text,
+      element: getElementDescription(element),
+      selector: getUniqueSelector(element),
+      matchCount: visibleElements.length,
+      clickedIndex: targetIndex
+    };
+  }
+
+  // Wait for element to appear
+  async function waitForElement(selector, options = {}) {
+    const { timeout = 10000, visible = true } = options;
+    const startTime = Date.now();
+    
+    return new Promise(resolve => {
+      const check = () => {
+        const element = document.querySelector(selector);
+        
+        if (element) {
+          if (!visible || isVisible(element)) {
+            resolve({
+              success: true,
+              selector: selector,
+              element: getElementDescription(element),
+              elapsed: Date.now() - startTime
+            });
+            return;
+          }
+        }
+        
+        if (Date.now() - startTime > timeout) {
+          resolve({
+            error: `Timeout after ${timeout}ms waiting for: ${selector}`,
+            selector: selector
+          });
+          return;
+        }
+        
+        setTimeout(check, 100);
+      };
+      check();
+    });
+  }
+
+  // Execute script safely in content script context (bypasses CSP)
+  function executeSafe(code) {
+    try {
+      // Execute in content script's isolated world - not affected by page CSP
+      const fn = new Function(code);
+      const result = fn();
+      return {
+        success: true,
+        result: result !== undefined ? JSON.stringify(result) : undefined
+      };
+    } catch (error) {
+      return {
+        error: error.message,
+        stack: error.stack
+      };
+    }
+  }
+
+  // Execute function on element (CSP-safe)
+  function executeOnElement(selector, fnCode) {
+    try {
+      const element = document.querySelector(selector);
+      if (!element) {
+        return { error: `Element not found: ${selector}` };
+      }
+      
+      // Create function that receives element
+      const fn = new Function('element', fnCode);
+      const result = fn(element);
+      
+      return {
+        success: true,
+        result: result !== undefined ? JSON.stringify(result) : undefined
+      };
+    } catch (error) {
+      return {
+        error: error.message
+      };
+    }
   }
 
   function getAttributes(selector) {

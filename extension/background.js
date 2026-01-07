@@ -392,6 +392,40 @@ async function executeToolCall(tool, params) {
           tag: params.tag || null
         });
       
+      case 'browser_click_by_text':
+        return await forwardAgentAction({
+          type: 'CLICK_BY_TEXT',
+          text: params.text,
+          options: {
+            tag: params.tag,
+            exact: params.exact || false,
+            index: params.index || 0
+          }
+        });
+      
+      case 'browser_wait_for_element':
+        return await forwardAgentAction({
+          type: 'WAIT_FOR_ELEMENT',
+          selector: params.selector,
+          options: {
+            timeout: params.timeout || 10000,
+            visible: params.visible !== false
+          }
+        });
+      
+      case 'browser_execute_safe':
+        return await forwardAgentAction({
+          type: 'EXECUTE_SAFE',
+          code: params.code || params.script
+        });
+      
+      case 'browser_execute_on_element':
+        return await forwardAgentAction({
+          type: 'EXECUTE_ON_ELEMENT',
+          selector: params.selector,
+          code: params.code || params.script
+        });
+      
       case 'get_attributes':
         return await forwardAgentAction({
           type: 'GET_ATTRIBUTES',

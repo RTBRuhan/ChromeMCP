@@ -140,8 +140,13 @@ Add this to your AI tool's MCP settings (e.g., Cursor's `mcp.json`):
 | `browser_type` | Type text into an element |
 | `browser_scroll` | Scroll the page |
 | `browser_press_key` | Press keyboard keys (Enter, Arrow keys, Tab, etc.) |
+| `browser_click_by_text` | Click element by its text content |
+| `browser_wait_for_element` | Wait for element to appear |
 | `browser_snapshot` | Get page snapshot with interactive elements |
+| `browser_screenshot` | Take a screenshot of the page |
 | `browser_evaluate` | Execute JavaScript code |
+| `browser_execute_safe` | Execute JS in content script context (bypasses CSP) |
+| `browser_execute_on_element` | Execute JS on specific element (CSP-safe) |
 
 ### DevTools Inspection
 
