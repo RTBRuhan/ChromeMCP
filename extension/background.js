@@ -292,6 +292,18 @@ async function executeToolCall(tool, params) {
           selector: params.selector || params.ref
         });
       
+      case 'browser_press_key':
+        return await forwardAgentAction({
+          type: 'PRESS_KEY',
+          key: params.key,
+          options: {
+            selector: params.selector || params.ref,
+            modifiers: params.modifiers || [],
+            repeat: params.repeat || 1,
+            delay: params.delay || 50
+          }
+        });
+      
       case 'browser_snapshot':
         return await forwardAgentAction({ type: 'GET_SNAPSHOT' });
       

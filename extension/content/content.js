@@ -508,6 +508,8 @@
           return await scroll(action.selector, action.options);
         case 'HOVER':
           return await hover(action.selector);
+        case 'PRESS_KEY':
+          return await pressKey(action.key, action.options);
         case 'GET_SNAPSHOT':
           return getPageSnapshot();
         case 'EVALUATE':
@@ -717,6 +719,120 @@
     element.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
     
     return { success: true, element: getElementDescription(element) };
+  }
+
+  async function pressKey(key, options = {}) {
+    const { 
+      selector = null, 
+      modifiers = [],
+      repeat = 1,
+      delay = 50 
+    } = options;
+    
+    // Target element or document
+    const element = selector ? document.querySelector(selector) : document.activeElement || document.body;
+    if (selector && !element) {
+      return { error: `Element not found: ${selector}` };
+    }
+    
+    // Key mapping for common names
+    const keyMap = {
+      'enter': 'Enter',
+      'return': 'Enter',
+      'escape': 'Escape',
+      'esc': 'Escape',
+      'tab': 'Tab',
+      'space': ' ',
+      'spacebar': ' ',
+      'backspace': 'Backspace',
+      'delete': 'Delete',
+      'del': 'Delete',
+      'arrowup': 'ArrowUp',
+      'arrowdown': 'ArrowDown',
+      'arrowleft': 'ArrowLeft',
+      'arrowright': 'ArrowRight',
+      'up': 'ArrowUp',
+      'down': 'ArrowDown',
+      'left': 'ArrowLeft',
+      'right': 'ArrowRight',
+      'home': 'Home',
+      'end': 'End',
+      'pageup': 'PageUp',
+      'pagedown': 'PageDown',
+      'f1': 'F1', 'f2': 'F2', 'f3': 'F3', 'f4': 'F4',
+      'f5': 'F5', 'f6': 'F6', 'f7': 'F7', 'f8': 'F8',
+      'f9': 'F9', 'f10': 'F10', 'f11': 'F11', 'f12': 'F12'
+    };
+    
+    const normalizedKey = keyMap[key.toLowerCase()] || key;
+    
+    // Modifier states
+    const ctrlKey = modifiers.includes('ctrl') || modifiers.includes('control');
+    const shiftKey = modifiers.includes('shift');
+    const altKey = modifiers.includes('alt');
+    const metaKey = modifiers.includes('meta') || modifiers.includes('cmd') || modifiers.includes('win');
+    
+    // Calculate keyCode for common keys
+    const keyCodes = {
+      'Enter': 13, 'Escape': 27, 'Tab': 9, ' ': 32, 'Backspace': 8, 'Delete': 46,
+      'ArrowUp': 38, 'ArrowDown': 40, 'ArrowLeft': 37, 'ArrowRight': 39,
+      'Home': 36, 'End': 35, 'PageUp': 33, 'PageDown': 34,
+      'F1': 112, 'F2': 113, 'F3': 114, 'F4': 115, 'F5': 116, 'F6': 117,
+      'F7': 118, 'F8': 119, 'F9': 120, 'F10': 121, 'F11': 122, 'F12': 123
+    };
+    
+    const keyCode = keyCodes[normalizedKey] || normalizedKey.charCodeAt(0);
+    
+    if (element.focus) element.focus();
+    
+    for (let i = 0; i < repeat; i++) {
+      const keyEventInit = {
+        key: normalizedKey,
+        code: normalizedKey.length === 1 ? `Key${normalizedKey.toUpperCase()}` : normalizedKey,
+        keyCode: keyCode,
+        which: keyCode,
+        ctrlKey,
+        shiftKey,
+        altKey,
+        metaKey,
+        bubbles: true,
+        cancelable: true
+      };
+      
+      element.dispatchEvent(new KeyboardEvent('keydown', keyEventInit));
+      element.dispatchEvent(new KeyboardEvent('keypress', keyEventInit));
+      
+      // Handle special keys that modify input
+      if (normalizedKey === 'Backspace' && element.value !== undefined) {
+        element.value = element.value.slice(0, -1);
+        element.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentBackward' }));
+      } else if (normalizedKey === 'Delete' && element.value !== undefined) {
+        // Delete forward - simplified
+        element.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'deleteContentForward' }));
+      } else if (normalizedKey.length === 1 && !ctrlKey && !altKey && !metaKey) {
+        // Regular character key
+        if (element.value !== undefined) {
+          element.value += shiftKey ? normalizedKey.toUpperCase() : normalizedKey;
+          element.dispatchEvent(new InputEvent('input', { bubbles: true, data: normalizedKey }));
+        }
+      }
+      
+      element.dispatchEvent(new KeyboardEvent('keyup', keyEventInit));
+      
+      if (i < repeat - 1) {
+        await sleep(delay);
+      }
+    }
+    
+    showActionTooltip('Key', `${modifiers.length ? modifiers.join('+') + '+' : ''}${normalizedKey}${repeat > 1 ? ` x${repeat}` : ''}`);
+    
+    return { 
+      success: true, 
+      key: normalizedKey,
+      modifiers,
+      repeat,
+      target: element.tagName?.toLowerCase() || 'document'
+    };
   }
 
   function getPageSnapshot() {

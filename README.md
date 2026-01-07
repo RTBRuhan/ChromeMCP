@@ -139,6 +139,7 @@ Add this to your AI tool's MCP settings (e.g., Cursor's `mcp.json`):
 | `browser_click` | Click an element by CSS selector |
 | `browser_type` | Type text into an element |
 | `browser_scroll` | Scroll the page |
+| `browser_press_key` | Press keyboard keys (Enter, Arrow keys, Tab, etc.) |
 | `browser_snapshot` | Get page snapshot with interactive elements |
 | `browser_evaluate` | Execute JavaScript code |
 

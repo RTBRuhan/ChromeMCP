@@ -20,6 +20,7 @@ const TOOLS = [
   { name: 'browser_type', description: 'Type text into element', inputSchema: { type: 'object', properties: { selector: { type: 'string' }, text: { type: 'string' } }, required: ['selector', 'text'] } },
   { name: 'browser_snapshot', description: 'Get page snapshot with interactive elements', inputSchema: { type: 'object', properties: {} } },
   { name: 'browser_scroll', description: 'Scroll page', inputSchema: { type: 'object', properties: { direction: { type: 'string', enum: ['up', 'down', 'left', 'right'] }, amount: { type: 'number' } } } },
+  { name: 'browser_press_key', description: 'Press a keyboard key (Enter, Escape, ArrowUp, ArrowDown, Tab, etc.)', inputSchema: { type: 'object', properties: { key: { type: 'string', description: 'Key to press: Enter, Escape, Tab, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Backspace, Delete, Space, F1-F12, or any character' }, selector: { type: 'string', description: 'Optional element selector to focus before pressing' }, modifiers: { type: 'array', items: { type: 'string', enum: ['ctrl', 'shift', 'alt', 'meta'] }, description: 'Modifier keys to hold' }, repeat: { type: 'number', description: 'Number of times to press the key' } }, required: ['key'] } },
   { name: 'browser_evaluate', description: 'Run JavaScript code', inputSchema: { type: 'object', properties: { script: { type: 'string' } }, required: ['script'] } },
   
   // DevTools Inspection
