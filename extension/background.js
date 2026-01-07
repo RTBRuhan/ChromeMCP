@@ -250,13 +250,30 @@ async function handleMCPMessage(message) {
 }
 
 async function executeToolCall(tool, params) {
-  if (!agentEnabled && tool !== 'browser_snapshot' && tool !== 'get_page_info') {
+  // Extension management tools don't require agent to be enabled
+  const noAgentRequired = [
+    'browser_snapshot', 'get_page_info', 
+    'list_extensions', 'reload_extension', 'get_extension_info', 
+    'enable_extension', 'disable_extension'
+  ];
+  
+  if (!agentEnabled && !noAgentRequired.includes(tool)) {
     return { error: 'Agent control is disabled' };
   }
   
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab) {
-    return { error: 'No active tab' };
+  // Extension management tools don't need a tab
+  const noTabRequired = [
+    'list_extensions', 'reload_extension', 'get_extension_info',
+    'enable_extension', 'disable_extension'
+  ];
+  
+  let tab = null;
+  if (!noTabRequired.includes(tool)) {
+    const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!activeTab) {
+      return { error: 'No active tab' };
+    }
+    tab = activeTab;
   }
   
   try {
