@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chrome MCP",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MCP server integration for AI browser control, interaction recording, and debugging",
   "permissions": [
     "activeTab",
@@ -9,7 +9,8 @@
     "scripting",
     "storage",
     "webNavigation",
-    "alarms"
+    "alarms",
+    "management"
   ],
   "host_permissions": [
     "<all_urls>"

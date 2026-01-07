@@ -386,6 +386,22 @@ async function executeToolCall(tool, params) {
           selector: params.selector
         });
       
+      // ===== EXTENSION MANAGEMENT TOOLS =====
+      case 'list_extensions':
+        return await listExtensions(params.includeDisabled);
+      
+      case 'reload_extension':
+        return await reloadExtension(params.extensionId);
+      
+      case 'get_extension_info':
+        return await getExtensionInfo(params.extensionId);
+      
+      case 'enable_extension':
+        return await setExtensionEnabled(params.extensionId, true);
+      
+      case 'disable_extension':
+        return await setExtensionEnabled(params.extensionId, false);
+      
       default:
         return { error: `Unknown tool: ${tool}` };
     }
@@ -487,6 +503,122 @@ async function forwardAgentAction(action, tabId) {
     }).catch(() => {});
     
     return result;
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+// ============ EXTENSION MANAGEMENT ============
+async function listExtensions(includeDisabled = true) {
+  try {
+    const extensions = await chrome.management.getAll();
+    const filtered = extensions.filter(ext => {
+      // Exclude self
+      if (ext.id === chrome.runtime.id) return false;
+      // Filter by enabled state if requested
+      if (!includeDisabled && !ext.enabled) return false;
+      return true;
+    });
+    
+    return filtered.map(ext => ({
+      id: ext.id,
+      name: ext.name,
+      version: ext.version,
+      enabled: ext.enabled,
+      type: ext.type,
+      description: ext.description?.slice(0, 100),
+      hasErrors: ext.installType === 'development' // Dev extensions might have errors
+    }));
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+async function reloadExtension(extensionId) {
+  try {
+    if (!extensionId) {
+      return { error: 'Extension ID is required' };
+    }
+    
+    // Special case: reload self
+    if (extensionId === chrome.runtime.id || extensionId === 'self') {
+      // Can't use management API on self, use runtime.reload
+      chrome.runtime.reload();
+      return { success: true, message: 'Self-reload triggered' };
+    }
+    
+    // Get extension info first to check if it exists
+    const extInfo = await chrome.management.get(extensionId);
+    if (!extInfo) {
+      return { error: `Extension ${extensionId} not found` };
+    }
+    
+    // Toggle OFF then ON to force reload
+    await chrome.management.setEnabled(extensionId, false);
+    await new Promise(resolve => setTimeout(resolve, 100)); // Brief pause
+    await chrome.management.setEnabled(extensionId, true);
+    
+    return { 
+      success: true, 
+      message: `Extension ${extInfo.name} (${extensionId}) reloaded`,
+      extension: {
+        id: extensionId,
+        name: extInfo.name,
+        enabled: true
+      }
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+async function getExtensionInfo(extensionId) {
+  try {
+    if (!extensionId) {
+      return { error: 'Extension ID is required' };
+    }
+    
+    const ext = await chrome.management.get(extensionId);
+    
+    return {
+      id: ext.id,
+      name: ext.name,
+      version: ext.version,
+      description: ext.description,
+      enabled: ext.enabled,
+      type: ext.type,
+      installType: ext.installType,
+      mayDisable: ext.mayDisable,
+      permissions: ext.permissions,
+      hostPermissions: ext.hostPermissions,
+      homepageUrl: ext.homepageUrl,
+      updateUrl: ext.updateUrl,
+      offlineEnabled: ext.offlineEnabled,
+      icons: ext.icons
+    };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+async function setExtensionEnabled(extensionId, enabled) {
+  try {
+    if (!extensionId) {
+      return { error: 'Extension ID is required' };
+    }
+    
+    await chrome.management.setEnabled(extensionId, enabled);
+    const ext = await chrome.management.get(extensionId);
+    
+    return {
+      success: true,
+      message: `Extension ${ext.name} ${enabled ? 'enabled' : 'disabled'}`,
+      extension: {
+        id: extensionId,
+        name: ext.name,
+        enabled: ext.enabled
+      }
+    };
   } catch (error) {
     return { error: error.message };
   }

@@ -36,7 +36,14 @@ const TOOLS = [
   { name: 'get_console_logs', description: 'Get captured console logs (log, warn, error)', inputSchema: { type: 'object', properties: {} } },
   { name: 'get_network_info', description: 'Get network requests and performance timing', inputSchema: { type: 'object', properties: {} } },
   { name: 'get_storage', description: 'Get localStorage or sessionStorage contents', inputSchema: { type: 'object', properties: { type: { type: 'string', enum: ['local', 'session'], default: 'local' } } } },
-  { name: 'get_cookies', description: 'Get document cookies', inputSchema: { type: 'object', properties: {} } }
+  { name: 'get_cookies', description: 'Get document cookies', inputSchema: { type: 'object', properties: {} } },
+  
+  // Extension Management (for extension developers)
+  { name: 'list_extensions', description: 'List all installed extensions', inputSchema: { type: 'object', properties: { includeDisabled: { type: 'boolean', default: true } } } },
+  { name: 'reload_extension', description: 'Reload an extension by ID (toggle off/on). Use "self" to reload Chrome MCP', inputSchema: { type: 'object', properties: { extensionId: { type: 'string' } }, required: ['extensionId'] } },
+  { name: 'get_extension_info', description: 'Get detailed info about an extension', inputSchema: { type: 'object', properties: { extensionId: { type: 'string' } }, required: ['extensionId'] } },
+  { name: 'enable_extension', description: 'Enable an extension by ID', inputSchema: { type: 'object', properties: { extensionId: { type: 'string' } }, required: ['extensionId'] } },
+  { name: 'disable_extension', description: 'Disable an extension by ID', inputSchema: { type: 'object', properties: { extensionId: { type: 'string' } }, required: ['extensionId'] } }
 ];
 
 // ============ STDIN - Handle line-based JSON (what Cursor actually sends) ============

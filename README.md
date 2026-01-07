@@ -164,6 +164,18 @@ Add this to your AI tool's MCP settings (e.g., Cursor's `mcp.json`):
 | `get_storage` | localStorage/sessionStorage contents |
 | `get_cookies` | Document cookies |
 
+### Extension Management (for Extension Developers)
+
+| Tool | Description |
+|------|-------------|
+| `list_extensions` | List all installed extensions |
+| `reload_extension` | Reload extension by ID (use "self" for Chrome MCP) |
+| `get_extension_info` | Get detailed extension info |
+| `enable_extension` | Enable an extension |
+| `disable_extension` | Disable an extension |
+
+> 🔧 **For Extension Developers**: These tools enable AI-assisted extension development workflow. Your AI can automatically reload your extension after making changes!
+
 ---
 
 ## 📁 Project Structure
