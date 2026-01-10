@@ -59,9 +59,15 @@ When you need to perform an action, respond with a JSON block like this:
 {"tool": "browser_navigate", "params": {"url": "https://example.com"}}
 \`\`\`
 
+⚡ PERFORMANCE TIPS FOR FAST BROWSING:
+- To understand a page, ALWAYS use 'browser_snapshot' or 'get_dom_tree' FIRST. These are instant (~50ms) and give you all text, links, and interactive elements.
+- ONLY use 'browser_screenshot' when you specifically need to analyze visual layout, images, or design.
+- If you need to see the entire page visually (not just viewport), use: {"tool": "browser_screenshot", "params": {"fullPage": true}}
+- Reading the DOM (text) is 10-20x faster than processing screenshots.
+
 You can use multiple tools in sequence. Always explain what you're doing.
 After executing tools, describe the results to the user.
-Be concise but helpful. If you need to see the page first, use browser_snapshot.`;
+Be concise but helpful.`;
 
 // ============ INITIALIZATION ============
 async function init() {

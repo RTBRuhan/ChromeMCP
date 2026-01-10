@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Apex Agent",
-  "version": "1.7.0",
+  "version": "1.9.1",
   "description": "Connect AI assistants to your browser via MCP protocol. Control, automate, record interactions, and debug web pages with AI-powered tools.",
   "permissions": [
     "activeTab",
@@ -48,7 +48,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/*", "sidebar/*", "getting-started.html", "getting-started.js"],
+      "resources": ["content/*", "sidebar/*", "getting-started.html", "getting-started.js", "icons/*"],
       "matches": ["<all_urls>"]
     }
   ],

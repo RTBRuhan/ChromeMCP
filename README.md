@@ -6,7 +6,7 @@
 
 **AI-Powered Browser Control & Debugging Extension**
 
-[![Version](https://img.shields.io/badge/Version-1.7.0-blue.svg)](https://github.com/RTBRuhan/ApexAgent/releases)
+[![Version](https://img.shields.io/badge/Version-1.8.0-blue.svg)](https://github.com/RTBRuhan/ApexAgent/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Chrome](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://www.google.com/chrome/)
 [![Edge](https://img.shields.io/badge/Edge-Extension-blue.svg)](https://www.microsoft.com/edge)
