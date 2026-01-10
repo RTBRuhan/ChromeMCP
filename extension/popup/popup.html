@@ -11,13 +11,7 @@
     <!-- Header -->
     <header class="header">
       <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 3H5C3.89543 3 3 3.89543 3 5V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M15 3H19C20.1046 3 21 3.89543 21 5V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M9 21H5C3.89543 21 3 20.1046 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M15 21H19C20.1046 21 21 20.1046 21 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
-        </svg>
+        <img src="../icons/icon48.png" alt="Apex Agent" class="logo-icon" width="20" height="20">
         <span class="logo-text">Apex Agent</span>
       </div>
       <div class="header-right">
@@ -34,6 +28,13 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
             <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+          </svg>
+        </button>
+        <button class="header-btn help-btn" id="helpBtn" title="Setup Guide">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
         </button>
         <a href="https://rtbruhan.github.io" target="_blank" class="header-btn author-btn" title="Author">
@@ -78,7 +79,7 @@
       </div>
       
       <div class="settings-section" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px;">
-        <p class="help-text" style="margin: 0; font-size: 0.7rem;">Apex Agent v1.6.0</p>
+        <p class="help-text" style="margin: 0; font-size: 0.7rem;">Apex Agent v1.7.0</p>
       </div>
     </div>
 
@@ -174,19 +175,29 @@
 
         <!-- Setup -->
         <div class="mcp-instructions">
-          <h3>Quick Setup</h3>
+          <div class="setup-header">
+            <h3>Quick Setup</h3>
+            <button class="guide-link" id="openGuideBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Full Guide
+            </button>
+          </div>
           <div class="instruction-steps">
             <div class="step">
               <span class="step-num">1</span>
-              <p>Run <code>npm start</code> in mcp-server folder</p>
+              <p>Install <a href="https://nodejs.org" target="_blank">Node.js</a> if you don't have it</p>
             </div>
             <div class="step">
               <span class="step-num">2</span>
-              <p>Add config below to your AI tool's MCP settings</p>
+              <p>Add the config below to Cursor's MCP settings</p>
             </div>
             <div class="step">
               <span class="step-num">3</span>
-              <p>Click Connect above</p>
+              <p>Restart Cursor, then click <strong>Connect</strong> above</p>
             </div>
           </div>
           <div class="config-code">
@@ -198,6 +209,7 @@
 }</pre>
             <button class="copy-config-btn" id="copyConfigBtn">Copy</button>
           </div>
+          <p class="setup-hint">Need help? Click the <strong>?</strong> button above for a step-by-step guide.</p>
         </div>
       </section>
 
@@ -419,10 +431,10 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <span class="version">v1.6.0</span>
+      <span class="version">v1.7.0</span>
       <div class="footer-links">
         <a href="#" id="shortcutsLink">Shortcuts</a>
-        <a href="#" id="helpLink">Help</a>
+        <a href="#" id="docsLink">Docs</a>
       </div>
     </footer>
   </div>

@@ -127,7 +127,7 @@ function handleMcp(msg) {
       id,
       result: {
         protocolVersion: params?.protocolVersion || '2024-11-05',
-        serverInfo: { name: 'apex-agent', version: '1.6.0' },
+        serverInfo: { name: 'apex-agent', version: '1.7.0' },
         capabilities: { tools: {} }
       }
     });

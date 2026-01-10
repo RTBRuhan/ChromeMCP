@@ -68,7 +68,11 @@ const elements = {
   
   // Footer
   shortcutsLink: document.getElementById('shortcutsLink'),
-  helpLink: document.getElementById('helpLink'),
+  docsLink: document.getElementById('docsLink'),
+  
+  // Help
+  helpBtn: document.getElementById('helpBtn'),
+  openGuideBtn: document.getElementById('openGuideBtn'),
 };
 
 // Initialize
@@ -724,9 +728,19 @@ function setupFooterLinks() {
     showToast('Ctrl+R: Record | Ctrl+P: Pause | Esc: Clear search');
   });
   
-  elements.helpLink.addEventListener('click', (e) => {
+  elements.docsLink.addEventListener('click', (e) => {
     e.preventDefault();
-    chrome.tabs.create({ url: 'https://github.com/RTBRuhan/ApexAgent' });
+    chrome.tabs.create({ url: 'https://github.com/RTBRuhan/ApexAgent#readme' });
+  });
+  
+  // Help button - opens getting started guide
+  elements.helpBtn.addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('getting-started.html') });
+  });
+  
+  // Open guide button in MCP tab
+  elements.openGuideBtn.addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('getting-started.html') });
   });
 }
 

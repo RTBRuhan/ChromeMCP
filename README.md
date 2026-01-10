@@ -2,15 +2,16 @@
 
 <div align="center">
 
-![Apex Agent Logo](extension/icons/icon.svg)
+<img src="extension/icons/icon128.png" alt="Apex Agent" width="80" height="80">
 
 **AI-Powered Browser Control & Debugging Extension**
 
+[![Version](https://img.shields.io/badge/Version-1.7.0-blue.svg)](https://github.com/RTBRuhan/ApexAgent/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Chrome](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://www.google.com/chrome/)
 [![Edge](https://img.shields.io/badge/Edge-Extension-blue.svg)](https://www.microsoft.com/edge)
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [MCP Tools](#mcp-tools) • [Author](#author)
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [MCP Tools](#mcp-tools) • [Privacy](#privacy) • [Author](#author)
 
 </div>
 
@@ -54,6 +55,18 @@ AI-powered debugging capabilities:
 - Element highlighting
 - Action tooltips
 - Connection status badge on extension icon
+
+### 🤖 Built-in AI Sidebar (Optional)
+- Use your own API key (OpenAI, Anthropic, Google, OpenRouter)
+- Chat with AI directly in the browser sidebar
+- AI can execute browser actions automatically
+
+### 🛡️ Chrome DevTools Protocol (CDP) Access
+- Event listener inspection
+- CPU profiling and heap snapshots
+- CSS/JS coverage analysis
+- DOM breakpoints
+- Accessibility tree inspection
 
 ---
 
@@ -189,22 +202,30 @@ Add this to your AI tool's MCP settings (e.g., Cursor's `mcp.json`):
 ```
 ApexAgent/
 ├── extension/
-│   ├── manifest.json       # Extension manifest (MV3)
-│   ├── background.js       # Service worker
+│   ├── manifest.json           # Extension manifest (MV3)
+│   ├── background.js           # Service worker
+│   ├── getting-started.html    # Setup guide for new users
 │   ├── popup/
-│   │   ├── popup.html      # Extension popup UI
-│   │   ├── popup.css       # Styles
-│   │   └── popup.js        # Popup logic
+│   │   ├── popup.html          # Extension popup UI
+│   │   ├── popup.css           # Styles
+│   │   └── popup.js            # Popup logic
+│   ├── sidebar/
+│   │   ├── sidebar.html        # AI sidebar panel
+│   │   ├── sidebar.css         # Sidebar styles
+│   │   └── sidebar.js          # AI chat logic
 │   ├── content/
-│   │   ├── content.js      # Content script (DOM interaction)
-│   │   └── content.css     # Visual feedback styles
+│   │   ├── content.js          # Content script (DOM interaction)
+│   │   └── content.css         # Visual feedback styles
 │   └── icons/
-│       └── icon.svg        # Extension icon
+│       ├── icon16.png          # 16x16 icon
+│       ├── icon48.png          # 48x48 icon
+│       └── icon128.png         # 128x128 icon
 ├── mcp-server/
-│   ├── index.js            # MCP server implementation
-│   ├── package.json        # Node.js dependencies
-│   └── README.md           # Server documentation
-└── README.md               # This file
+│   ├── index.js                # MCP server implementation
+│   ├── package.json            # Node.js dependencies
+│   └── README.md               # Server documentation
+├── PRIVACY.md                  # Privacy policy
+└── README.md                   # This file
 ```
 
 ---
@@ -233,13 +254,16 @@ Configure in the **Agent** tab:
 
 ---
 
-## 🔒 Security Notes
+## 🔒 Security & Privacy
 
-- Agent control is **disabled by default**
+- Agent control is **enabled by default** for convenience, but can be toggled off
 - All AI actions require explicit permission
 - The extension only connects to localhost MCP server
-- No data is sent to external servers
-- Auto-disconnect on extension close
+- **No data is sent to external servers**
+- All settings and logs are stored locally on your device
+- Open source - you can verify the code yourself
+
+For complete privacy details, see our [Privacy Policy](PRIVACY.md).
 
 ---
 
